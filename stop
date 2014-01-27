@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "Stopping eog and xgraph!..."
+killall eog
+killall xgraph
+echo "done"
+
+

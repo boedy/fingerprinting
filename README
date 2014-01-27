@@ -1,0 +1,17 @@
+TIVision 
+Framework of cpp-sources for image processing labs at Haagse Hogeschool Rijswijk
+Opleiding Technische Informatica (Department of Computer Science).
+
+make: for building all the sources in the TIVision directory.
+make clean: removing the builts
+./go running the software   (a file image1.pgm-file, 640x480, 8bit should be present)
+./stop closing all the eog and xgraph windows
+
+dependend on:
+- eog (for viewing the pgm-files)
+- xgraph (for diagrams)
+- libdc1394v2.0 (for cam reading)
+
+Copyright Pieter Burghouwt Haagse Hogeschool 2008
+This is software free to use and copy under the condions of the GPL license.
+

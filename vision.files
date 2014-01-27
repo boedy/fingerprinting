@@ -1,0 +1,17 @@
+go.cpp
+ImageBuffer.cpp
+ImageBuffer.h
+ImageFile.cpp
+ImageFile.h
+ImageFilter.h
+ImageProcessor.cpp
+ImageProcessor.h
+Parameters.h
+tdots.cpp
+tdots.h
+wavfile.h
+wavfile.cpp
+waveform.h
+waveform.cpp
+spectrogram.h
+spectrogram.cpp
