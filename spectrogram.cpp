@@ -26,24 +26,20 @@ void Spectrogram::process(){
 
     out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * transform_size);
 
-    for(i = 0; i < transform_size; i++){
-        in[i] = wavFile->getSample(i);
-    }
 
     for(int x=0; x < wavFile->getSamples()/step_size; x++){
 
-        for(i = 0; i < step_size; i++){
-            in[i] = in[i+step_size];
-        }
-
-        for(i = step_size; i < transform_size; i++){
-            in[i] = wavFile->getSample(i+x*step_size);
+        int j = 0;
+        for(i = step_size*x; i < (x * step_size) + transform_size - 1; i++){
+            in[j] = wavFile->getSample(i)/32767.9;
+            j++;
         }
 
         //apply window function
         for(i = 0; i < transform_size; i++){
-            in[i] *= windowHanning(i, transform_size);
-            //in[i] *= windowBlackmanHarris(i, transform_size);
+//            cout << in[i] << endl;
+//            in[i] *= windowHanning(i, transform_size);
+            in[i] *= windowBlackmanHarris(i, transform_size);
         }
 
         p = fftw_plan_dft_r2c_1d(transform_size, in, out, FFTW_ESTIMATE);
@@ -51,32 +47,25 @@ void Spectrogram::process(){
         fftw_execute(p); /* repeat as needed */
 
         for(i = 0; i < half; i++){
+            out[i][0] *= (2./transform_size);
+            out[i][1] *= (2./transform_size);
+//            processed[i] = 10*log10(out[i][0]*out[i][0] + out[i][1]*out[i][1]);
+//            cout << processed[i] << endl;
             processed[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
+            processed[i] =10. * (log (processed[i] + 1e-6)/log(10)) /-60.;
+//            cout << processed[i] << endl;
         }
 
         for (i = 0; i < half; i++){
-            double temp=(processed[i] / transform_size / 1);
-            if (temp > 0.0)
-                processed[i] = 10*log10(processed[i]);
-            else
-                processed[i] = 0;
-            In->setPixel(x,(half-1)-i,processed[i]);
+            if(processed[i] > 0.99)
+                processed[i] = 1;
+//            cout << processed[i] << endl;
+            In->setPixel(x,(half-1)-i,processed[i]*255);
         }
 
-//        for(int y=0; y < transform_size/2;y++){
-//            out[y][0]*out[y][0] + out[y][1]*out[y][1]
-//                    //                    db = 10*log10();
-//                    //            cout << x << " - " << In->getHeight()-y << " - " << db << endl;
-//                    In->setPixel(x,511-y,db);
-//        }
+
     }
 
-    //        for(int x=0; x < wavFile->getin()/step_size; x++){
-    //            for(int y=0; y < In->getHeight(); y++){
-    //                //TODO: gebeurt nog iets raars met de eerste pixels
-    //                In->setPixel(x, y, In->getPixel(x,y)/max_value*255);
-    //            }
-    //        }
 
     fftw_destroy_plan(p);
     fftw_free(out);
