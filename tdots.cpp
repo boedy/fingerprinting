@@ -1,5 +1,6 @@
 #include "tdots.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -8,50 +9,55 @@ TDots::TDots(TImageBuffer *in, TImageBuffer *out) : TImageProcessor(in, out){
     filter_threshold = 100;
 }
 
-TDots::TDots(TImageBuffer *in, TImageBuffer *out, int t) : TImageProcessor(in, out){
+TDots::TDots(TImageBuffer *in, TImageBuffer *out, int t, int threshold) : TImageProcessor(in, out){
     tile_size = t;
-    filter_threshold = 150;
+    filter_threshold = threshold;
 }
 
 void TDots::process(){
-    int16_t h,w;
+    int h,w;
     int temp = 0;
 
     int pixel_color;
     int pixel_w = 0;
     int pixel_h = 0;
 
-    int width = In->getWidth();
-    int height = In->getHeight();
+    int width = 17401;
+    int height = 512;
 
-    int sat[width][height];
     int tile_padding = 3;
+    vector<vector < int> > sat;
 
+    //vector voor geheugen gebruik ipv array
     for(w = 0; w < width; w++){
+        vector<int> temp;
         for(h = 0; h < height; h++){
-            sat[w][h] = 255;
+           temp.push_back(255);
         }
+        sat.push_back(temp);
     }
 
-    for(w = 0; w < width; w++){
-        for(h = 0; h < height; h++){
+
+
+    for(w = 1; w < width; w++){
+        for(h = 1; h < height; h++){
             sat[w][h] = In->getPixel(w,h) + sat[w-1][h] + sat[w][h-1] - sat[w-1][h-1];
-            if(h == 1 && w == 1){
-                //cout << (int) In->getPixel(w,h) << " + " << sat[w-1][h] << " + " << sat[w][h-1] << " - " << sat[w-1][h-1] << endl;
-            }
+//            if(h == 1 && w == 1){
+//                //cout << (int) In->getPixel(w,h) << " + " << sat[w-1][h] << " + " << sat[w][h-1] << " - " << sat[w-1][h-1] << endl;
+//            }
         }
     }
 
-    temp = (sat[0][0] + sat[4][4] - sat[0][4] - sat[4][0]);
-    cout << temp << endl;
+//    temp = (sat[0][0] + sat[4][4] - sat[0][4] - sat[4][0]);
+//    cout << temp << endl;
 
     for(int tile_width = 0; tile_width*tile_size < width; tile_width++){
         for(int tile_height = 0; tile_height*tile_size < height; tile_height++){
 
 
             //Het doorlopen van alle tegels
-            pixel_color = 0;
-            temp = 0;
+            pixel_color = 255;
+            temp = 255;
 
             for(int i=0; i < tile_size; i++){
                 for(int j=0;j < tile_size;j++){
@@ -64,7 +70,7 @@ void TDots::process(){
                     }
 
                     //zoek de donkerste pixel binnen de tegel. deze heeft de grootste intesiteit
-                    if(temp > pixel_color){
+                    if(temp < pixel_color){
                         pixel_color = temp;
                         pixel_h = h;
                         pixel_w = w;
@@ -73,7 +79,7 @@ void TDots::process(){
                 }
             }
             //marge om aantal punten lager te houden. Anders punt op elke tegel
-            if(pixel_color > filter_threshold){
+            if(pixel_color < filter_threshold){
                 //                cout << pixel_color << endl;
                 mark(pixel_w, pixel_h);
             }

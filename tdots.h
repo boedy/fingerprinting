@@ -9,7 +9,7 @@
 class TDots:public TImageProcessor{
   public:
     TDots(TImageBuffer *in, TImageBuffer *out);
-    TDots(TImageBuffer *in, TImageBuffer *out, int tile_size);
+    TDots(TImageBuffer *in, TImageBuffer *out, int tile_size, int);
     void process(void);
     void mark(int w, int h);
 private:

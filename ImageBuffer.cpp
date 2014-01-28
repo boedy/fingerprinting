@@ -48,7 +48,7 @@ void TImageBuffer::set(){
     int i;
 
     for(i=0; i < width*height;i++){
-        canvas[i] = 255;
+        canvas[i] = 0;
     }
 }
 
