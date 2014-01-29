@@ -48,8 +48,10 @@ int main(){
     TImageBuffer *Buffer1;
     TImageFile *File1;
 
-        WavFile *wav = new WavFile("crystalised.wav");
 //    WavFile *wav = new WavFile("hmpback1.wav");
+//    WavFile *wav = new WavFile("crystalised.wav");
+//    WavFile *wav = new WavFile("tone10000.wav");
+    WavFile *wav = new WavFile("tone10000-50pitch.wav");
 
     wav->process();
     wav->printInfo();
@@ -65,8 +67,9 @@ int main(){
     Spectrogram *spec = new Spectrogram(Buffer1, wav);
     spec->process();
 
-    TDots *dots = new TDots(Buffer1, Buffer1, 32, 240);
+    TDots *dots = new TDots(Buffer1, Buffer1, 32, 200);
     dots->process();
+    dots->pairCalculation();
 
     File1->write();
 

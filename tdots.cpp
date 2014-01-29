@@ -1,6 +1,6 @@
 #include "tdots.h"
 #include <iostream>
-#include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -22,11 +22,13 @@ void TDots::process(){
     int pixel_w = 0;
     int pixel_h = 0;
 
-    int width = 17401;
-    int height = 512;
+    int width = In->getWidth();
+    int height = In->getHeight();
 
     int tile_padding = 3;
     vector<vector < int> > sat;
+
+    dot_count = 0;
 
     //vector voor geheugen gebruik ipv array
     for(w = 0; w < width; w++){
@@ -37,20 +39,13 @@ void TDots::process(){
         sat.push_back(temp);
     }
 
-
-
     for(w = 1; w < width; w++){
         for(h = 1; h < height; h++){
             sat[w][h] = In->getPixel(w,h) + sat[w-1][h] + sat[w][h-1] - sat[w-1][h-1];
-//            if(h == 1 && w == 1){
-//                //cout << (int) In->getPixel(w,h) << " + " << sat[w-1][h] << " + " << sat[w][h-1] << " - " << sat[w-1][h-1] << endl;
-//            }
         }
     }
 
-//    temp = (sat[0][0] + sat[4][4] - sat[0][4] - sat[4][0]);
-//    cout << temp << endl;
-
+    //doorloop de de spectrogram per tile
     for(int tile_width = 0; tile_width*tile_size < width; tile_width++){
         for(int tile_height = 0; tile_height*tile_size < height; tile_height++){
 
@@ -66,7 +61,6 @@ void TDots::process(){
 
                     if(h > tile_padding && w > tile_padding && h < height-tile_padding && w < width-tile_padding){
                         temp = (sat[w-tile_padding][h-tile_padding] + sat[w+tile_padding][h+tile_padding] - sat[w-tile_padding][h+tile_padding] - sat[w+tile_padding][h-tile_padding])/(tile_padding*tile_padding*4);
-                        //                        cout << temp << endl;
                     }
 
                     //zoek de donkerste pixel binnen de tegel. deze heeft de grootste intesiteit
@@ -80,12 +74,12 @@ void TDots::process(){
             }
             //marge om aantal punten lager te houden. Anders punt op elke tegel
             if(pixel_color < filter_threshold){
-                //                cout << pixel_color << endl;
                 mark(pixel_w, pixel_h);
             }
+
         }
     }
-
+    cout << "Dots placed: " << dot_count << endl;
 }
 
 void TDots::mark(int x, int y){
@@ -93,7 +87,6 @@ void TDots::mark(int x, int y){
 
     //groot van het stipje
     dot_size = 5;
-
 
     for(int i=0 ;i<dot_size; i++ ){
         for(int j=0; j<dot_size; j++){
@@ -105,5 +98,41 @@ void TDots::mark(int x, int y){
             }
         }
     }
+    setPoint(pos_x,pos_y);
+}
 
+void TDots::setPoint(int x, int y){
+    dot_count++;
+    points.push_back(make_pair(x,y));
+}
+
+void TDots::pairCalculation(){
+
+
+    for(int i=0; i < points.size(); i++){
+        int min_distance = 9999999999;
+        int j = 0;
+        if(i < 5)
+            j = 0;
+
+        pair< pair<int,int>, pair<int,int> > closest_pair;
+        for(;j < i+5; j++){
+            int temp = sqrt(pow(points[i].first-points[j].second, 2)+pow(points[i].first-points[j].second, 2));
+            if(temp < min_distance){
+                min_distance = temp;
+                closest_pair.first = points[i];
+                closest_pair.second = points[j];
+                cout << points[j].first << "- " << j <<  endl;
+            }
+        }
+        //todo:verwijderen dubbel paar
+        pairs.push_back(closest_pair);
+    }
+    for(int i = 0; i < pairs.size(); i++){
+        int freqEstimate = pairs[i].first.second/10;
+        int deltaFreq = abs(pairs[i].first.second-pairs[i].second.second);
+        int deltaTime = abs(pairs[i].first.first-pairs[i].second.first);
+        cout << freqEstimate << "::" << deltaFreq << "::" << deltaTime << endl;
+    }
+//    cout << "("<< pairs[i].first.first << "," << pairs[i].first.second << ")" << "("<< pairs[i].second.first << "," << pairs[i].second.second << ")" << endl;
 }

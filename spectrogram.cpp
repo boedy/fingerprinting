@@ -18,7 +18,6 @@ void Spectrogram::process(){
     int transform_size = 1024;
     int half = transform_size/2;
     int step_size = transform_size/2;
-    double db;
     double in[transform_size];
     double processed[half];
     fftw_complex *out;
@@ -30,14 +29,12 @@ void Spectrogram::process(){
     for(int x=0; x < wavFile->getSamples()/step_size; x++){
 
         int j = 0;
-        for(i = step_size*x; i < (x * step_size) + transform_size - 1; i++){
+        for(i = step_size*x; i < (x * step_size) + transform_size - 1; i++, j++){
             in[j] = wavFile->getSample(i)/32767.9;
-            j++;
         }
 
         //apply window function
         for(i = 0; i < transform_size; i++){
-//            cout << in[i] << endl;
 //            in[i] *= windowHanning(i, transform_size);
             in[i] *= windowBlackmanHarris(i, transform_size);
         }
@@ -49,17 +46,13 @@ void Spectrogram::process(){
         for(i = 0; i < half; i++){
             out[i][0] *= (2./transform_size);
             out[i][1] *= (2./transform_size);
-//            processed[i] = 10*log10(out[i][0]*out[i][0] + out[i][1]*out[i][1]);
-//            cout << processed[i] << endl;
             processed[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
             processed[i] =10. * (log (processed[i] + 1e-6)/log(10)) /-60.;
-//            cout << processed[i] << endl;
         }
 
         for (i = 0; i < half; i++){
-            if(processed[i] > 0.99)
+            if(processed[i] > 0.95)
                 processed[i] = 1;
-//            cout << processed[i] << endl;
             In->setPixel(x,(half-1)-i,processed[i]*255);
         }
 
