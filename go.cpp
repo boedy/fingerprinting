@@ -47,11 +47,14 @@ int main(){
 
     TImageBuffer *Buffer1;
     TImageFile *File1;
+    string filename = "tone10000";
+    string temp;
 
-//    WavFile *wav = new WavFile("hmpback1.wav");
+    temp = filename;
+    WavFile *wav = new WavFile(getImage(temp.append(".wav")));
 //    WavFile *wav = new WavFile("crystalised.wav");
 //    WavFile *wav = new WavFile("tone10000.wav");
-    WavFile *wav = new WavFile("tone10000-50pitch.wav");
+//    WavFile *wav = new WavFile("tone10000-50pitch.wav");
 
     wav->process();
     wav->printInfo();
@@ -59,7 +62,8 @@ int main(){
     Buffer1 = new TImageBuffer((int)wav->getSamples()/512,512);
     Buffer1->set();
 
-    File1 = new TImageFile("spectrogram.pgm", Buffer1);
+    temp = filename;
+    File1 = new TImageFile(getImage(temp.append(".pgm")), Buffer1);
 
 //    Waveform *waveform = new Waveform(Buffer1, wav);
 //    waveform->process();
@@ -67,7 +71,7 @@ int main(){
     Spectrogram *spec = new Spectrogram(Buffer1, wav);
     spec->process();
 
-    TDots *dots = new TDots(Buffer1, Buffer1, 32, 200);
+    TDots *dots = new TDots(Buffer1, Buffer1, 64, 220);
     dots->process();
     dots->pairCalculation();
 
@@ -76,54 +80,5 @@ int main(){
 
     return 0;
 }
-
-//int main(int argc, char **argv){
-//    TImageBuffer *Buffer1, *Buffer2;
-//    TImageFile *File1, *File2;
-//    TDots *dots;
-
-//    string bash_script = "./generate_spectrogram.sh ";
-//    string files[3], bash_command, image_file;
-
-//    //de bestanden: alleen wav bestanden in de map sounds_src
-//    files[0] = "piano";
-//    files[1] = "piano_pitch";
-//    files[2] = "piano_amp";
-
-//    int file_array_size = (sizeof(files)/sizeof(*files));
-
-//    Buffer1 = new TImageBuffer();
-//    Buffer2 = new TImageBuffer();
-//    dots = new TDots(Buffer1, Buffer2, 64);
-
-//    for(int i=0; i < file_array_size; i++){
-//        bash_command = "";
-//        bash_command.append(bash_script).append("sounds_src/").append(files[i]).append(".wav");
-//        cout << bash_command << endl;
-
-//        printf("Processing ...\n");
-//        //generate spectrograms from audio files
-////        system(bash_command.c_str());
-
-//        image_file = "images/";
-//        image_file.append(files[i]).append(".pgm");
-
-//        File1 = new TImageFile(getImage(image_file), Buffer1);
-
-//        image_file = "images_complete/";
-//        image_file.append(files[i]).append(".pgm");
-
-//        File2 = new TImageFile(getImage(image_file), Buffer2);
-
-//        File1->read();
-
-//        //Doe hier de analyse
-//        dots->process();
-
-//        File2->write();
-//    }
-
-//    return 0;
-//}
 
 

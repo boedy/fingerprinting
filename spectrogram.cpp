@@ -51,7 +51,7 @@ void Spectrogram::process(){
         }
 
         for (i = 0; i < half; i++){
-            if(processed[i] > 0.95)
+            if(processed[i] > 0.8)
                 processed[i] = 1;
             In->setPixel(x,(half-1)-i,processed[i]*255);
         }

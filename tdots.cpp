@@ -1,8 +1,11 @@
 #include "tdots.h"
 #include <iostream>
 #include <cmath>
+#include "vamp-sdk/Plugin.h"
 
 using namespace std;
+
+
 
 TDots::TDots(TImageBuffer *in, TImageBuffer *out) : TImageProcessor(in, out){
     tile_size = 64;
