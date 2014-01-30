@@ -107,28 +107,24 @@ void TDots::setPoint(int x, int y){
 }
 
 void TDots::pairCalculation(){
-
-
-    for(int i=0; i < points.size(); i++){
-        int min_distance = 9999999999;
-        int j = 0;
-        if(i < 5)
-            j = 0;
+    for(unsigned int i=0; i < points.size(); i++){
+        int min_distance = 99999999;
 
         pair< pair<int,int>, pair<int,int> > closest_pair;
-        for(;j < i+5; j++){
-            int temp = sqrt(pow(points[i].first-points[j].second, 2)+pow(points[i].first-points[j].second, 2));
-            if(temp < min_distance){
-                min_distance = temp;
-                closest_pair.first = points[i];
-                closest_pair.second = points[j];
-                cout << points[j].first << "- " << j <<  endl;
+        for(unsigned int j = 0;j < points.size(); j++){
+            if(i != j){
+                int temp = sqrt(pow(points[i].first-points[j].second, 2)+pow(points[i].first-points[j].second, 2));
+                if(temp < min_distance){
+                    min_distance = temp;
+                    closest_pair.first = points[i];
+                    closest_pair.second = points[j];
+                }
             }
         }
         //todo:verwijderen dubbel paar
         pairs.push_back(closest_pair);
     }
-    for(int i = 0; i < pairs.size(); i++){
+    for(unsigned int i = 0; i < pairs.size(); i++){
         int freqEstimate = pairs[i].first.second/10;
         int deltaFreq = abs(pairs[i].first.second-pairs[i].second.second);
         int deltaTime = abs(pairs[i].first.first-pairs[i].second.first);

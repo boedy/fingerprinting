@@ -71,6 +71,7 @@ int main(){
     dots->process();
     dots->pairCalculation();
 
+
     File1->write();
 
     return 0;
