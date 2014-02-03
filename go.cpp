@@ -32,6 +32,7 @@
 #include "spectrogram.h"
 
 
+
 using namespace std;
 
 char* getImage(string image_file){
@@ -47,8 +48,10 @@ int main(){
 
     TImageBuffer *Buffer1;
     TImageFile *File1;
-    string filename = "tone10000";
+    string filename = "Boy_recording";
     string temp;
+
+
 
     temp = filename;
     WavFile *wav = new WavFile(getImage(temp.append(".wav")));
@@ -71,9 +74,10 @@ int main(){
     Spectrogram *spec = new Spectrogram(Buffer1, wav);
     spec->process();
 
-//    TDots *dots = new TDots(Buffer1, Buffer1, 64, 220);
-//    dots->process();
-//    dots->pairCalculation();
+    TDots *dots = new TDots(Buffer1, Buffer1, 64, 100);
+    dots->process();
+    dots->pairCalculation();
+
 
 
     File1->write();

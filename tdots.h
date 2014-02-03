@@ -6,6 +6,8 @@
 #include "ImageBuffer.h"
 #include "ImageProcessor.h"
 #include <vector>
+#include <set>
+#include <string>
 
 class TDots:public TImageProcessor{
   public:
@@ -22,6 +24,8 @@ private:
     int dot_count;
     std::vector< std::pair<int,int> > points;
     std::vector< std::pair< std::pair<int,int>, std::pair<int,int> > > pairs;
+//    std::set< std::pair< std::pair<int,int>, std::pair<int,int> > > pairs;
+    std::set< std::string > hashes;
 };
 
 #endif // TDOTS_H

@@ -53,7 +53,6 @@ void Spectrogram::process(){
                 processed[i] = 0;
             } else {
                 processed[i] /= 96.;             // Reduce the divisor if you prefer darker peaks
-                cout << processed[i] << endl;
                 if (processed[i] > 1)
                     processed[i] = 1;
             }
