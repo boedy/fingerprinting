@@ -15,6 +15,7 @@ class TDots:public TImageProcessor{
     void mark(int w, int h);
     void setPoint(int x, int y);
     void pairCalculation();
+    void symmertyDetection();
 private:
     int tile_size;
     int filter_threshold;

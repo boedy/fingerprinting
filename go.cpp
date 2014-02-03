@@ -71,9 +71,9 @@ int main(){
     Spectrogram *spec = new Spectrogram(Buffer1, wav);
     spec->process();
 
-    TDots *dots = new TDots(Buffer1, Buffer1, 64, 220);
-    dots->process();
-    dots->pairCalculation();
+//    TDots *dots = new TDots(Buffer1, Buffer1, 64, 220);
+//    dots->process();
+//    dots->pairCalculation();
 
 
     File1->write();

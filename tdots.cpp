@@ -1,7 +1,6 @@
 #include "tdots.h"
 #include <iostream>
 #include <cmath>
-#include "vamp-sdk/Plugin.h"
 
 using namespace std;
 

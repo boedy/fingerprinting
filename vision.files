@@ -15,5 +15,3 @@ waveform.h
 waveform.cpp
 spectrogram.h
 spectrogram.cpp
-constantqtransform.h
-constantqtransform.cpp
