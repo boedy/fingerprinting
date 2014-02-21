@@ -4,12 +4,12 @@
 #include "Parameters.h" 
 #include "ImageBuffer.h"
 
-class TImageFilter{
+class ImageFilter{
 	protected:
-	  TImageBuffer *In;
-	  TImageBuffer *Out;
+      ImageBuffer *In;
+      ImageBuffer *Out;
 	public:
-	  TImageFilter(TImageBuffer *in, TImageBuffer *out);
+      ImageFilter(ImageBuffer *in, ImageBuffer *out);
 	  void process(void);
 };
 

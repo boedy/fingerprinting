@@ -19,11 +19,10 @@
 #include "Parameters.h" 
 #include <stdint.h>
 
-class TImageBuffer{
+class ImageBuffer{
 public:
-    uint8_t Content[HEIGHT][WIDTH];
-    TImageBuffer(void);
-    TImageBuffer(int height, int width);
+    ImageBuffer(void);
+    ImageBuffer(int height, int width);
     uint8_t * getContent(void);
     void clear(void);
     void set(void);
@@ -32,6 +31,7 @@ public:
     int getHeight();
     int getWidth();
 private:
+    uint8_t Content[HEIGHT][WIDTH];
     int width, height;
     uint8_t* canvas;
 };

@@ -23,7 +23,7 @@
 using namespace std;
   
 
-TImageFile::TImageFile(char *name, TImageBuffer *buffer){
+ImageFile::ImageFile(char *name, ImageBuffer *buffer){
   sprintf(FileName, "%s",name);		
   Buffer=buffer;
   sprintf(Magicstr, "P5");
@@ -33,7 +33,7 @@ TImageFile::TImageFile(char *name, TImageBuffer *buffer){
 }
     
 
-void TImageFile::read(){
+void ImageFile::read(){
   u_char dummy;
   FILE *handle;
   
@@ -48,7 +48,7 @@ void TImageFile::read(){
 }
 
 
-void TImageFile::write(){
+void ImageFile::write(){
 	FILE* handle;
 	
 	handle = fopen(FileName, "w");

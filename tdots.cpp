@@ -7,12 +7,12 @@ using namespace std;
 
 
 
-TDots::TDots(TImageBuffer *in, TImageBuffer *out) : TImageProcessor(in, out){
+TDots::TDots(ImageBuffer *in, ImageBuffer *out) : ImageProcessor(in, out){
     tile_size = 64;
     filter_threshold = 100;
 }
 
-TDots::TDots(TImageBuffer *in, TImageBuffer *out, int t, int threshold) : TImageProcessor(in, out){
+TDots::TDots(ImageBuffer *in, ImageBuffer *out, int t, int threshold) : ImageProcessor(in, out){
     tile_size = t;
     filter_threshold = threshold;
 }
@@ -141,8 +141,6 @@ void TDots::pairCalculation(){
         temp.append(to_string(freqEstimate)).append("|").append(to_string(deltaFreq)).append("|").append(to_string(deltaTime));
         hashes.insert(temp);
 //        cout << '"' << freqEstimate << "|" << deltaFreq << "|" << deltaTime << "\",";
-
-
     }
 
     for(set<string>::iterator it = hashes.begin(); it!=hashes.end(); it++){

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Spectrogram::Spectrogram(TImageBuffer *in, WavFile *wav) : TImageProcessor(in){
+Spectrogram::Spectrogram(ImageBuffer *in, WavFile *wav) : ImageProcessor(in){
     wavFile = wav;
 }
 

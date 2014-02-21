@@ -20,7 +20,7 @@
 #include "Parameters.h"
 
 
-class TImageFile{
+class ImageFile{
 
   private:
     char Magicstr[10];
@@ -28,18 +28,10 @@ class TImageFile{
     char Heightstr[10];
     char Resstr[10];
     char FileName[80];
-    TImageBuffer *Buffer;
+    ImageBuffer *Buffer;
 
   public:  
-    TImageFile(char *name, TImageBuffer *buffer);
-    void getMagicstr(char *str);
-    void getWidthstr(char *str);
-    void getHeightstr(char *str);
-    void getResstr(char *str);
-    void setMagicstr(char *str);
-    void setWidthstr(char *str);
-    void setHeightstr(char *str);
-    void setResstr(char *str);
+    ImageFile(char *name, ImageBuffer *buffer);
     void read();
     void write();	
 };

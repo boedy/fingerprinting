@@ -9,10 +9,10 @@
 #include <set>
 #include <string>
 
-class TDots:public TImageProcessor{
+class TDots:public ImageProcessor{
   public:
-    TDots(TImageBuffer *in, TImageBuffer *out);
-    TDots(TImageBuffer *in, TImageBuffer *out, int tile_size, int);
+    TDots(ImageBuffer *in, ImageBuffer *out);
+    TDots(ImageBuffer *in, ImageBuffer *out, int tile_size, int);
     void process(void);
     void mark(int w, int h);
     void setPoint(int x, int y);

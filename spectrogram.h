@@ -6,10 +6,10 @@
 #include "wavfile.h"
 #include <fftw3.h>
 
-class Spectrogram : public TImageProcessor
+class Spectrogram : public ImageProcessor
 {
 public:
-    Spectrogram(TImageBuffer *in, WavFile * wav);
+    Spectrogram(ImageBuffer *in, WavFile * wav);
     void process();
     void setWaveFile(WavFile *);
     double windowBlackmanHarris(double n, double N);

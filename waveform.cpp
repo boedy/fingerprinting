@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Waveform::Waveform(TImageBuffer *in, WavFile *wav) : TImageProcessor(in){
+Waveform::Waveform(ImageBuffer *in, WavFile *wav) : ImageProcessor(in){
     wavFile = wav;
 }
 

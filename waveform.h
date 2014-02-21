@@ -5,10 +5,10 @@
 #include "ImageProcessor.h"
 #include "wavfile.h"
 
-class Waveform : public TImageProcessor
+class Waveform : public ImageProcessor
 {
 public:
-    Waveform(TImageBuffer *in, WavFile * wav);
+    Waveform(ImageBuffer *in, WavFile * wav);
     void process();
     void setWaveFile(WavFile *);
 private:

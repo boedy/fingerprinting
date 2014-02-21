@@ -15,3 +15,7 @@ waveform.h
 waveform.cpp
 spectrogram.h
 spectrogram.cpp
+peakfinder.h
+peakfinder.cpp
+smooth.h
+smooth.cpp

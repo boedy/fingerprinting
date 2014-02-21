@@ -27,6 +27,8 @@
 #include "ImageFile.h"
 #include "ImageProcessor.h" 
 #include "tdots.h"
+#include "peakfinder.h"
+#include "smooth.h"
 #include "wavfile.h"
 #include "waveform.h"
 #include "spectrogram.h"
@@ -45,13 +47,10 @@ char* getImage(string image_file){
 }
 
 int main(){
-
-    TImageBuffer *Buffer1;
-    TImageFile *File1;
-    string filename = "Boy_recording";
+    ImageBuffer *Buffer1;
+    ImageFile *File1;
+    string filename = "hmpback1";
     string temp;
-
-
 
     temp = filename;
     WavFile *wav = new WavFile(getImage(temp.append(".wav")));
@@ -62,11 +61,11 @@ int main(){
     wav->process();
     wav->printInfo();
 
-    Buffer1 = new TImageBuffer((int)wav->getSamples()/512,512);
+    Buffer1 = new ImageBuffer((int)wav->getSamples()/512,512);
     Buffer1->set();
 
     temp = filename;
-    File1 = new TImageFile(getImage(temp.append(".pgm")), Buffer1);
+    File1 = new ImageFile(getImage(temp.append(".pgm")), Buffer1);
 
 //    Waveform *waveform = new Waveform(Buffer1, wav);
 //    waveform->process();
@@ -74,11 +73,15 @@ int main(){
     Spectrogram *spec = new Spectrogram(Buffer1, wav);
     spec->process();
 
-    TDots *dots = new TDots(Buffer1, Buffer1, 64, 100);
-    dots->process();
-    dots->pairCalculation();
+    Smooth *smooth = new Smooth(Buffer1, 21);
+    smooth->process();
 
+//    TDots *dots = new TDots(Buffer1, Buffer1, 64, 140);
+//    dots->process();
+//    dots->pairCalculation();
 
+//    PeakFinder *peak = new PeakFinder(Buffer1);
+//    peak->process();
 
     File1->write();
 

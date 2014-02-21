@@ -17,24 +17,24 @@
 #include "Parameters.h" 
 
 
-TImageBuffer::TImageBuffer(void){
+ImageBuffer::ImageBuffer(void){
     width = 640;
     height = 480;
 }
 
-TImageBuffer::TImageBuffer(int w, int h){
+ImageBuffer::ImageBuffer(int w, int h){
     width = w;
     height = h;
 
     canvas = new uint8_t[width*height];
 }
 
-uint8_t * TImageBuffer::getContent(){
+uint8_t * ImageBuffer::getContent(){
     return &canvas[0];
 }
 
 
-void TImageBuffer::clear(){
+void ImageBuffer::clear(){
     uint16_t w, h;
 
     for (h=0; h<HEIGHT; h++){
@@ -44,7 +44,7 @@ void TImageBuffer::clear(){
     }
 }
 
-void TImageBuffer::set(){
+void ImageBuffer::set(){
     int i;
 
     for(i=0; i < width*height;i++){
@@ -53,19 +53,19 @@ void TImageBuffer::set(){
 }
 
 
-uint8_t TImageBuffer::getPixel(int x, int y){
+uint8_t ImageBuffer::getPixel(int x, int y){
     return canvas[x+y*width];
 }
 
 
-void TImageBuffer::setPixel(int x, int y, uint8_t v){
+void ImageBuffer::setPixel(int x, int y, uint8_t v){
     canvas[x+y*width] = v;
 }
 
-int TImageBuffer::getHeight(){
+int ImageBuffer::getHeight(){
     return height;
 }
 
-int TImageBuffer::getWidth(){
+int ImageBuffer::getWidth(){
     return width;
 }

@@ -18,23 +18,16 @@
 #include "ImageBuffer.h"
 #include "ImageProcessor.h"
 
-TImageProcessor::TImageProcessor(TImageBuffer *in){
+ImageProcessor::ImageProcessor(ImageBuffer *in){
     In=in;
-};
+}
 
-TImageProcessor::TImageProcessor(TImageBuffer *in, TImageBuffer *out){
+ImageProcessor::ImageProcessor(ImageBuffer *in, ImageBuffer *out){
     In=in;
     Out=out;
-};
+}
 
 
-void TImageProcessor::process(void){
-    //simple copy function, normally overrided in child classes
-    uint16_t h, w;
+void ImageProcessor::process(void){
 
-    for(h=0; h<HEIGHT; h++){
-        for(w=0; w<WIDTH; w++){
-            Out->Content[h][w]=In->Content[h][w];
-        }
-    }
-};
+}

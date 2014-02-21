@@ -20,13 +20,13 @@
 #include "ImageBuffer.h"
 
 
-class TImageProcessor{
+class ImageProcessor{
   protected:
-    TImageBuffer *In;
-    TImageBuffer *Out;
+    ImageBuffer *In;
+    ImageBuffer *Out;
   public:
-    TImageProcessor(TImageBuffer *in);
-    TImageProcessor(TImageBuffer *in, TImageBuffer *out);
+    ImageProcessor(ImageBuffer *in);
+    ImageProcessor(ImageBuffer *in, ImageBuffer *out);
     void process(void);
 };
 
