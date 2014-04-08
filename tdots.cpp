@@ -7,12 +7,12 @@ using namespace std;
 
 
 
-TDots::TDots(ImageBuffer *in, ImageBuffer *out) : ImageProcessor(in, out){
-    tile_size = 64;
+TDots::TDots(ImageBuffer *in) : ImageProcessor(in){
+    tile_size = 32;
     filter_threshold = 100;
 }
 
-TDots::TDots(ImageBuffer *in, ImageBuffer *out, int t, int threshold) : ImageProcessor(in, out){
+TDots::TDots(ImageBuffer *in, int t, int threshold) : ImageProcessor(in){
     tile_size = t;
     filter_threshold = threshold;
 }
@@ -33,6 +33,16 @@ void TDots::process(){
 
     dot_count = 0;
 
+    ImageBuffer *mask = new ImageBuffer(In->getWidth(), In->getHeight());
+    mask->set();
+
+    //copy image to mask
+    for(w=0; w < In->getWidth(); w++){
+        for (h=0; h <In->getHeight(); h++){
+            mask->setPixel(w,h,In->getPixel(w,h));
+        }
+    }
+
     //vector voor geheugen gebruik ipv array
     for(w = 0; w < width; w++){
         vector<int> temp;
@@ -44,7 +54,7 @@ void TDots::process(){
 
     for(w = 1; w < width; w++){
         for(h = 1; h < height; h++){
-            sat[w][h] = In->getPixel(w,h) + sat[w-1][h] + sat[w][h-1] - sat[w-1][h-1];
+            sat[w][h] = mask->getPixel(w,h) + sat[w-1][h] + sat[w][h-1] - sat[w-1][h-1];
         }
     }
 
@@ -72,7 +82,7 @@ void TDots::process(){
                         pixel_h = h;
                         pixel_w = w;
                     }
-                    Out->setPixel(w,h, In->getPixel(w,h));
+                    //In->setPixel(w,h, mask->getPixel(w,h));
                 }
             }
             //marge om aantal punten lager te houden. Anders punt op elke tegel
@@ -82,6 +92,7 @@ void TDots::process(){
 
         }
     }
+
     cout << "Dots placed: " << dot_count << endl;
 }
 
@@ -97,7 +108,7 @@ void TDots::mark(int x, int y){
             pos_y = y-((dot_size-1)/2)+j;
 
             if(pos_x < In->getWidth() && pos_y < In->getHeight() && pos_x > 0 && pos_y > 0){
-                Out->setPixel(pos_x, pos_y, 0);
+                In->setPixel(pos_x, pos_y, 0);
             }
         }
     }
@@ -106,7 +117,8 @@ void TDots::mark(int x, int y){
 
 void TDots::setPoint(int x, int y){
     dot_count++;
-    points.push_back(make_pair(x,y));
+    pair<int,int> temp = make_pair(x,y);
+    points.push_back(temp);
 }
 
 void TDots::pairCalculation(){

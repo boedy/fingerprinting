@@ -9,10 +9,12 @@
 #include <set>
 #include <string>
 
+using namespace std;
+
 class TDots:public ImageProcessor{
   public:
-    TDots(ImageBuffer *in, ImageBuffer *out);
-    TDots(ImageBuffer *in, ImageBuffer *out, int tile_size, int);
+    TDots(ImageBuffer *in);
+    TDots(ImageBuffer *in, int tile_size, int);
     void process(void);
     void mark(int w, int h);
     void setPoint(int x, int y);
@@ -20,12 +22,14 @@ class TDots:public ImageProcessor{
     void symmertyDetection();
 private:
     int tile_size;
+    int tile_height;
+    int tile_width;
     int filter_threshold;
     int dot_count;
-    std::vector< std::pair<int,int> > points;
-    std::vector< std::pair< std::pair<int,int>, std::pair<int,int> > > pairs;
-//    std::set< std::pair< std::pair<int,int>, std::pair<int,int> > > pairs;
-    std::set< std::string > hashes;
+    vector< pair<int,int> > points;
+    vector< pair< pair<int,int>, pair<int,int> > > pairs;
+//    set< pair< pair<int,int>, pair<int,int> > > pairs;
+    set< string > hashes;
 };
 
 #endif // TDOTS_H

@@ -14,7 +14,7 @@ void Spectrogram::setWaveFile(WavFile *file){
 }
 
 void Spectrogram::process(){
-    int transform_size = 1024;
+    int transform_size = 512    ;
     int half = transform_size/2;
     int step_size = transform_size/2;
     double in[transform_size];

@@ -22,6 +22,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <array>
+#include <dirent.h>
+#include <string.h>
 #include "Parameters.h"
 #include "ImageBuffer.h" 
 #include "ImageFile.h"
@@ -34,10 +37,9 @@
 #include "spectrogram.h"
 
 
-
 using namespace std;
 
-char* getImage(string image_file){
+char* toCharPointer(string image_file){
     char * image_file_char;
 
     image_file_char = new char[image_file.size() + 1];
@@ -46,45 +48,62 @@ char* getImage(string image_file){
     return image_file_char;
 }
 
+vector<string> searchInFolder(char * folder){
+    DIR* dirp = opendir(folder);
+    if(dirp != NULL){
+        struct dirent* dp;
+        vector<string> files;
+        while ((dp = readdir(dirp)) != NULL) {
+            if (strstr(dp->d_name, ".wav") != 0) {
+                string total = string(folder)+ "/" + string(dp->d_name);
+                files.push_back(string(folder)+ "/" + string(dp->d_name));
+
+                cout << total << endl;
+            }
+        }
+        return files;
+    }
+}
+
 int main(){
-    ImageBuffer *Buffer1;
-    ImageFile *File1;
-    string filename = "hmpback1";
+
+    vector<string> files;
     string temp;
 
-    temp = filename;
-    WavFile *wav = new WavFile(getImage(temp.append(".wav")));
-//    WavFile *wav = new WavFile("crystalised.wav");
-//    WavFile *wav = new WavFile("tone10000.wav");
-//    WavFile *wav = new WavFile("tone10000-50pitch.wav");
+    //    filename[0] = "music/samples/downsampled";
+    //    filename[1] = "music/samples/downsampled_uppitch_10";
 
-    wav->process();
-    wav->printInfo();
 
-    Buffer1 = new ImageBuffer((int)wav->getSamples()/512,512);
-    Buffer1->set();
+    files = searchInFolder("audio_files/samples");
 
-    temp = filename;
-    File1 = new ImageFile(getImage(temp.append(".pgm")), Buffer1);
+//    files[0] = "music/samples/bbq-bob";
+//    files[1] = "music/samples/bbq-bob_uppitch_10";
 
-//    Waveform *waveform = new Waveform(Buffer1, wav);
-//    waveform->process();
+//    for(int i = 0; i < files.size(); i++){
+//        temp = files[i];
+//        WavFile *wav = new WavFile(toCharPointer(temp.append(".wav")));
+//        wav->process();
+//        //            wav->printInfo();
 
-    Spectrogram *spec = new Spectrogram(Buffer1, wav);
-    spec->process();
+//        ImageBuffer *buffer1 = new ImageBuffer((int)wav->getSamples()/256,256);
+//        buffer1->set();
 
-    Smooth *smooth = new Smooth(Buffer1, 21);
-    smooth->process();
+//        temp = files[i];
+//        ImageFile *File1 = new ImageFile(toCharPointer(temp.append(".pgm")), buffer1);
 
-//    TDots *dots = new TDots(Buffer1, Buffer1, 64, 140);
-//    dots->process();
-//    dots->pairCalculation();
+//        Spectrogram *spec = new Spectrogram(buffer1, wav);
+//        spec->process();
 
-//    PeakFinder *peak = new PeakFinder(Buffer1);
-//    peak->process();
+//        TDots *dots = new TDots(buffer1, 32, 180);
+//        dots->process();
 
-    File1->write();
+//        File1->write();
+//        delete wav;
+//        delete spec;
+//        delete buffer1;
+//        delete dots;
 
+//    }
     return 0;
 }
 

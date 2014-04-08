@@ -13,7 +13,9 @@ WavFile::WavFile(char *f){
 }
 
 WavFile::~WavFile(){
-    free(obuf);
+    delete filename;
+    delete comment;
+    delete obuf;
 }
 
 void WavFile::setFile(char *file){
@@ -27,7 +29,6 @@ void WavFile::process(){
 
     if (fd != -1)
     {
-        cout << true;
         //close(fd);
         date = mus_sound_write_date(filename);
         srate = mus_sound_srate(filename);
@@ -36,22 +37,21 @@ void WavFile::process(){
         comment = mus_sound_comment(filename);
         length = (double)samples / (float)(chans * srate);
         frames = mus_sound_frames(filename);
-
         strftime(timestr, 64, "%a %d-%b-%y %H:%M %Z", localtime(&date));
 
         int i,j,k,n;
         int buffer_size = 1024;
 
         //allocate memory for buffer
-        obuf = (short *)calloc(frames * chans, sizeof(short));
-
-        //allocate memory for buffer
-        bufs = (mus_float_t **)calloc(chans, sizeof(mus_float_t *));
+        obuf = new short[frames*chans+buffer_size];
+        bufs = new mus_float_t*[chans];
         for (i=0;i<chans;i++)
-            bufs[i] = (mus_float_t *)calloc(buffer_size, sizeof(mus_float_t));
+            bufs[i] = new mus_float_t[buffer_size];
 
+        //loop steeds per buffer size
         for (i = 0; i < frames; i += buffer_size)
         {
+            //haal buffersize samples uit channel 1 van bestand fd en stop het in bufs
             mus_sound_read(fd, 0, buffer_size - 1, chans, bufs);
             for (k = 0, j = 0; k < buffer_size; k++, j += chans)
                 for (n = 0; n < chans; n++){
@@ -62,9 +62,9 @@ void WavFile::process(){
         mus_sound_close_input(fd);
 
         for(int i = 0; i < chans; i++){
-            free(bufs[i]);
+            delete bufs[i];
         }
-        free(bufs);
+        delete bufs;
     }
 }
 
