@@ -1,24 +1,3 @@
-/* go.cpp v1.0: Demonstration of the TIVision classes.
- * Copyright 2008 Pieter Burghouwt Haagse Hogeschool Rijswijk
- *
- * Application will mirror picture image1.pgm in the vertical axis
- * Result is shown and written to image2.pgm.
- * As an alternative source the camera (Allied Guppy 33B) can be
- * used by uncommenting the camera-statements and commenting
- * the read from image1.
- *
- * This file is part of TIVision.
- * TIVision is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * TIVision is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with TIVision.  If not, see <http://www.gnu.org/licenses/>.
- */
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
@@ -29,13 +8,14 @@
 #include "ImageBuffer.h" 
 #include "ImageFile.h"
 #include "ImageProcessor.h" 
-#include "tdots.h"
 #include "peakfinder.h"
 #include "smooth.h"
 #include "wavfile.h"
 #include "waveform.h"
 #include "spectrogram.h"
-
+#include "database.h"
+#include "hashgenerator.h"
+#include "pairofpeaks.h"
 
 using namespace std;
 
@@ -48,62 +28,77 @@ char* toCharPointer(string image_file){
     return image_file_char;
 }
 
-vector<string> searchInFolder(char * folder){
-    DIR* dirp = opendir(folder);
+vector<string> searchInFolder(string folder){
+    DIR* dirp = opendir(folder.c_str());
     if(dirp != NULL){
         struct dirent* dp;
         vector<string> files;
         while ((dp = readdir(dirp)) != NULL) {
-            if (strstr(dp->d_name, ".wav") != 0) {
-                string total = string(folder)+ "/" + string(dp->d_name);
-                files.push_back(string(folder)+ "/" + string(dp->d_name));
-
-                cout << total << endl;
+            string filename = dp->d_name;
+            if (filename.substr(filename.find_last_of(".")) == ".wav"){
+                files.push_back(filename);
             }
         }
         return files;
     }
 }
 
-int main(){
+void runAlgorithm(string folder, string type){
+    //get all files in folder
+    vector<string> files = searchInFolder(folder);
+    string dest_image_folder = "image_files/";
 
-    vector<string> files;
-    string temp;
+    for(int i = 0; i < files.size(); i++){
 
-    //    filename[0] = "music/samples/downsampled";
-    //    filename[1] = "music/samples/downsampled_uppitch_10";
+        WavFile *wav = new WavFile(toCharPointer(folder+files[i]));
+        wav->process();
 
+        ImageBuffer *buffer1 = new ImageBuffer((int)wav->getSamples()/256,256);
+        buffer1->set();
 
-    files = searchInFolder("audio_files/samples");
+        string imageFile = files[i];
+        imageFile.replace(imageFile.end()-3, imageFile.end(), "pgm");
+        ImageFile *file = new ImageFile(toCharPointer(dest_image_folder+imageFile), buffer1);
 
-//    files[0] = "music/samples/bbq-bob";
-//    files[1] = "music/samples/bbq-bob_uppitch_10";
+        Spectrogram *spec = new Spectrogram(buffer1, wav);
+        spec->process();
 
-//    for(int i = 0; i < files.size(); i++){
-//        temp = files[i];
-//        WavFile *wav = new WavFile(toCharPointer(temp.append(".wav")));
-//        wav->process();
-//        //            wav->printInfo();
+        PeakFinder *pf = new PeakFinder(buffer1, 32, 180);
+        pf->process();
+        pf->combinePeaks();
+        vector< PairOfPeaks*> peaks = pf->getPairOfPeaks();
+        if(type == "store"){
+            for(vector< PairOfPeaks*>::iterator it = peaks.begin(); it != peaks.end(); it++){
+                cout << (*it)->getHash() << endl;
+            }
+        }
 
-//        ImageBuffer *buffer1 = new ImageBuffer((int)wav->getSamples()/256,256);
-//        buffer1->set();
-
-//        temp = files[i];
-//        ImageFile *File1 = new ImageFile(toCharPointer(temp.append(".pgm")), buffer1);
-
-//        Spectrogram *spec = new Spectrogram(buffer1, wav);
-//        spec->process();
-
-//        TDots *dots = new TDots(buffer1, 32, 180);
-//        dots->process();
-
-//        File1->write();
-//        delete wav;
+//        file->write();
+        delete wav;
+//        delete file;
+        delete buffer1;
 //        delete spec;
-//        delete buffer1;
-//        delete dots;
+//        delete pf;
 
-//    }
+    }
+}
+
+int main(){
+    string audio_reference_folder = "audio_files/wav/";
+    string audio_sample_folder = "audio_files/samples/";
+
+//    Database<string>* db1 = new Database<string>("int");
+//    Database<int>* db2 = new Database<int>("string");
+
+//    db1->insert("foo", "bar");
+//    db2->insert("foo", 1);
+
+//    cout << db1->get("foo") << endl;
+//    cout << db2->get("food") << endl;
+
+
+    runAlgorithm(audio_sample_folder, "store");
+
     return 0;
 }
 

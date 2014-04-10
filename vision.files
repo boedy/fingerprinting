@@ -7,8 +7,6 @@ ImageFilter.h
 ImageProcessor.cpp
 ImageProcessor.h
 Parameters.h
-tdots.cpp
-tdots.h
 wavfile.h
 wavfile.cpp
 waveform.h
@@ -19,3 +17,9 @@ peakfinder.h
 peakfinder.cpp
 smooth.h
 smooth.cpp
+database.h
+database.cpp
+hashgenerator.h
+hashgenerator.cpp
+pairofpeaks.h
+pairofpeaks.cpp
